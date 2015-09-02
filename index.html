@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!--link rel="stylesheet" href="main.css"-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+
+    <!--[if IE]>
+        <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+    <body style='background: blue;'>
+        <br>
+        <div class='container'>
+<div class='panel panel-default' style='background:grey'>
+<div class='panel-header' style='background:lightgrey'>
+    <h1 align='center'>Aarons Rooom Control System</h1>
+    </div>
+    <div class='panel-body' style='background:lightgrey'>
+    <center> <h2>Status of Blinds</h2>
+        <img id='blindsImage' src="http://homeguides.sfgate.com/DM-Resize/photos.demandstudios.com/getty/article/18/147/87726829_XS.jpg?w=442&h=442&keep_ratio=1" style="width:440px; height: 300px;">
+        <br><br>
+        <p align='center'><button id='blindsToggle' class='btn btn-primary'>Open Blinds!</button></p>
+        </center>
+    </div>
+        </div>
+        </div>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!--script src="app.js"></script-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+        <script>
+var blindsToggle = 0
+var main = function(){
+$('#blindsToggle').click(function(){
+    toggleBlinds();
+});
+
+
+
+}
+
+function toggleBlinds(){
+    if(blindsToggle === 0){
+    $('#blindsImage')[0].src = 'http://www.brakdraperiesandblinds.com/images/bs_miniblinds1.jpg';
+    $('#blindsToggle')[0].innerHTML = 'Close Blinds!';
+        $.get("http://192.168.1.199:80/", {pin:13});
+        blindsToggle = 1;
+    }
+    else{
+    $('#blindsImage')[0].src = 'http://homeguides.sfgate.com/DM-Resize/photos.demandstudios.com/getty/article/18/147/87726829_XS.jpg?w=442&h=442&keep_ratio=1';
+    $('#blindsToggle')[0].innerHTML = 'Open Blinds!';
+        $.get("http://192.168.1.199:80/", {pin:13});
+        blindsToggle = 0;
+    }
+}
+
+$(document).ready(main)
+        </script>
+    </body>
