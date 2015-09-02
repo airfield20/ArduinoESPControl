@@ -45,12 +45,22 @@ void loop()
      int connectionId = esp8266.read()-48; // subtract 48 because the read() function returns 
                                            // the ASCII decimal value and 0 (the first decimal number) starts at 48
           
-     esp8266.find("pin="); // advance cursor to "pin="
+     esp8266.find("commandID="); // advance cursor to "pin="
      
-     int pinNumber = (esp8266.read()-48)*10; // get first number i.e. if the pin 13 then the 1st number is 1, then multiply to get 10
-     pinNumber += (esp8266.read()-48); // get second number, i.e. if the pin number is 13 then the 2nd number is 3, then add to the first number
+     int commandID = (esp8266.read()-48)*10; // get first number i.e. if the pin 13 then the 1st number is 1, then multiply to get 10
+     commandID += (esp8266.read()-48); // get second number, i.e. if the pin number is 13 then the 2nd number is 3, then add to the first number
      
-     digitalWrite(pinNumber, !digitalRead(pinNumber)); // toggle pin    
+     //digitalWrite(commandID, !digitalRead(commandID)); // toggle pin    
+
+     switch(commandID){
+      case 0:
+        openBlinds();
+      break;
+      case 1;
+        closeBlinds();
+      break;
+      default:
+     }
      
      // make close command
      String closeCommand = "AT+CIPCLOSE="; 
@@ -104,6 +114,10 @@ digitalWrite(hbridge2,LOW);
 }
 
 void closeBlinds(){
-
+digitalWrite(hbridge1,LOW);
+digitalWrite(hbridge2,HIGH);
+delay(3000);
+digitalWrite(hbridge1,LOW);
+digitalWrite(hbridge2,LOW);
 }
 
