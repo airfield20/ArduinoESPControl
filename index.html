@@ -49,13 +49,13 @@ function toggleBlinds(){
     if(blindsToggle === 0){
     $('#blindsImage')[0].src = 'http://www.brakdraperiesandblinds.com/images/bs_miniblinds1.jpg';
     $('#blindsToggle')[0].innerHTML = 'Close Blinds!';
-        $.get("http://192.168.1.199:80/", {pin:13});
+        $.get("http://192.168.1.199:80/", {commandID:00});
         blindsToggle = 1;
     }
     else{
     $('#blindsImage')[0].src = 'http://homeguides.sfgate.com/DM-Resize/photos.demandstudios.com/getty/article/18/147/87726829_XS.jpg?w=442&h=442&keep_ratio=1';
     $('#blindsToggle')[0].innerHTML = 'Open Blinds!';
-        $.get("http://192.168.1.199:80/", {pin:13});
+        $.get("http://192.168.1.199:80/", {commandID:01});
         blindsToggle = 0;
     }
 }
