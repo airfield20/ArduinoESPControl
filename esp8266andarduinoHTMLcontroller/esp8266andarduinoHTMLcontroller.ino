@@ -1,8 +1,8 @@
   #include <SoftwareSerial.h>
  
 #define DEBUG true
-#define hbridge1 2
-#define hbridge2 3
+#define hbridge1 9
+#define hbridge2 10
 SoftwareSerial esp8266(2,3); // make RX Arduino line is pin 2, make TX Arduino line is pin 3.
                              // This means that you need to connect the TX line from the esp to the Arduino's pin 2
                              // and the RX line from the esp to the Arduino's pin 3
@@ -19,7 +19,14 @@ void setup()
   
   pinMode(13,OUTPUT);
   digitalWrite(13,LOW);
-   
+
+  pinMode(10,OUTPUT);
+  digitalWrite(10,LOW);
+
+  pinMode(9,OUTPUT);
+  digitalWrite(9,LOW);
+
+   digitalWrite(13,HIGH);
   sendData("AT+RST\r\n",2000,DEBUG); // reset module
   sendData("AT+CWJAP=\"Co_Chill Network (2.4)\",\"760-mph-1220-kmh-m1\"\n",4000,DEBUG); //connects to wifi network
   delay(10000);
@@ -30,6 +37,7 @@ void setup()
   //sendData("AT+CIPSTART=TCP,192.168.1.199,80\n",1000,DEBUG); //starts tcp port 0 with static ip
   
   sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
+digitalWrite(13,LOW);
 }
  
 void loop()
@@ -42,24 +50,25 @@ void loop()
     {
      delay(1000); // wait for the serial buffer to fill up (read all the serial data)
      // get the connection id so that we can then disconnect
+    //Serial.println("READ IN: " + esp8266.read()-48);
      int connectionId = esp8266.read()-48; // subtract 48 because the read() function returns 
                                            // the ASCII decimal value and 0 (the first decimal number) starts at 48
           
-     esp8266.find("commandID="); // advance cursor to "pin="
+     esp8266.find("pin="); // advance cursor to "pin="
      
      int commandID = (esp8266.read()-48)*10; // get first number i.e. if the pin 13 then the 1st number is 1, then multiply to get 10
      commandID += (esp8266.read()-48); // get second number, i.e. if the pin number is 13 then the 2nd number is 3, then add to the first number
-     
+     Serial.println("Read In: " + commandID);
      //digitalWrite(commandID, !digitalRead(commandID)); // toggle pin    
-
+     //digitalWrite(commandID-3, !digitalRead(commandID-3));
      switch(commandID){
-      case 0:
+      case 12:
         openBlinds();
       break;
-      case 1;
+      case 13:
         closeBlinds();
       break;
-      default:
+      
      }
      
      // make close command
@@ -108,7 +117,7 @@ String sendData(String command, const int timeout, boolean debug)
 void openBlinds(){
 digitalWrite(hbridge1,HIGH);
 digitalWrite(hbridge2,LOW);
-delay(3000);
+delay(6000);
 digitalWrite(hbridge1,LOW);
 digitalWrite(hbridge2,LOW);
 }
@@ -116,7 +125,7 @@ digitalWrite(hbridge2,LOW);
 void closeBlinds(){
 digitalWrite(hbridge1,LOW);
 digitalWrite(hbridge2,HIGH);
-delay(3000);
+delay(6000);
 digitalWrite(hbridge1,LOW);
 digitalWrite(hbridge2,LOW);
 }
