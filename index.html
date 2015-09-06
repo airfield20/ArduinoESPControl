@@ -25,7 +25,11 @@
     <center> <h2>Status of Blinds</h2>
         <img id='blindsImage' src="http://homeguides.sfgate.com/DM-Resize/photos.demandstudios.com/getty/article/18/147/87726829_XS.jpg?w=442&h=442&keep_ratio=1" style="width:440px; height: 300px;">
         <br><br>
-        <p align='center'><button id='closeBlinds' class='btn btn-primary'>Close Blinds!</button>&nbsp;&nbsp;<button id='blindsToggle' class='btn btn-primary'>Open Blinds!</button></p>
+        <p align='center'><button id='closeBlinds' class='btn btn-primary'>Close Blinds!</button>
+        &nbsp;&nbsp;
+        <button id='blindsToggle' class='btn btn-primary'>Open Blinds!</button></p>
+        <br>
+        <button id='reset' class='btn btn-danger'><strong>RESET ESP</strong></button>
         </center>
     </div>
         </div>
@@ -45,6 +49,9 @@ $('#blindsToggle').click(function(){
 $('#closeBlinds').click(function(){
     $.get("http://192.168.1.199:80/", {pin:12});
     $('#blindsImage')[0].src = 'http://homeguides.sfgate.com/DM-Resize/photos.demandstudios.com/getty/article/18/147/87726829_XS.jpg?w=442&h=442&keep_ratio=1';
+});
+$('#reset').click(function(){
+   $.get("http://192.168.1.199:80/", {pin:14});
 });
 
 

@@ -26,18 +26,8 @@ void setup()
   pinMode(9,OUTPUT);
   digitalWrite(9,LOW);
 
-   digitalWrite(13,HIGH);
-  sendData("AT+RST\r\n",2000,DEBUG); // reset module
-  sendData("AT+CWJAP=\"Co_Chill Network (2.4)\",\"760-mph-1220-kmh-m1\"\n",4000,DEBUG); //connects to wifi network
-  delay(10000);
-  sendData("AT+CWMODE=3\r\n",1000,DEBUG);// configure as access point
-  delay(5000); //delay allowing for connectivity 
-  sendData("AT+CIFSR\r\n",1000,DEBUG); // get ip address
-  sendData("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
-  //sendData("AT+CIPSTART=TCP,192.168.1.199,80\n",1000,DEBUG); //starts tcp port 0 with static ip
+  initESP();
   
-  sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
-digitalWrite(13,LOW);
 }
  
 void loop()
@@ -68,7 +58,9 @@ void loop()
       case 13:
         closeBlinds();
       break;
-      
+      case 14:
+        initESP();
+      break;
      }
      
      // make close command
@@ -114,12 +106,34 @@ String sendData(String command, const int timeout, boolean debug)
     return response;
 }
 
+void initESP(){
+  digitalWrite(13,HIGH);
+  sendData("AT+RST\r\n",2000,DEBUG); // reset module
+  sendData("AT+CWJAP=\"Co_Chill Network (2.4)\",\"760-mph-1220-kmh-m1\"\n",4000,DEBUG); //connects to wifi network
+  delay(5000);
+  sendData("AT+CWMODE=3\r\n",1000,DEBUG);// configure as access point
+  delay(5000); //delay allowing for connectivity 
+  sendData("AT+CIFSR\r\n",1000,DEBUG); // get ip address
+  sendData("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
+  //sendData("AT+CIPSTART=\"TCP\",\"192.168.1.73\",\"1234\"\n",1000,DEBUG); //starts tcp port 1234 with static ip
+  
+  sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
+  digitalWrite(13,LOW);
+  delay(1000);
+
+  //sendData("AT+CIPSEND=4\n",1000,DEBUG);
+  //sendData("1234567\n",1000,DEBUG);
+}
+
 void openBlinds(){
 digitalWrite(hbridge1,HIGH);
 digitalWrite(hbridge2,LOW);
 delay(6000);
 digitalWrite(hbridge1,LOW);
 digitalWrite(hbridge2,LOW);
+sendData("GET http://192.168.1.73:1234/?openingTheBlinds HTTP/1.0\r\n\r\n\r\n",1000,DEBUG);
+delay(3000);
+sendData("AT+CIPCLOSE", 1000, DEBUG);
 }
 
 void closeBlinds(){
